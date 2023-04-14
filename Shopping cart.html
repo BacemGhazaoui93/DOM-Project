@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Shopping Cart</title>
+	<style>
+		table {
+			width: 100%;
+		}
+		th, td {
+			border: 1px solid whitesmoke;
+			text-align: center;
+		}
+		th {
+			background-color: wheat;
+		}
+	
+		button {
+			background-color: green;
+			color: white;
+			border: none;
+			cursor: pointer;
+		}
+		.delete-btn {
+			background-color: red;
+		}
+		.like-btn {
+			background-color: white;
+			font-size: 12px;
+			border: 2px solid whitesmoke;
+			color: grey;
+			
+		}
+		.like-btn.liked {
+			color: red;
+			border-color: red;
+		}
+		.total {
+			font-size: 20px;
+			font-weight: bold;
+			text-align: right;
+		}
+	</style>
+</head>
+<body>
+    <!--Creating a table which will contain the list of product, price, quantity with buttons + & - and action cell with a delete button and like button-->
+	<table>
+		<thead>
+			<tr>
+				<th>Product</th>
+				<th>Price</th>
+				<th>Quantity</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Product 1</td>
+				<td>$10.00</td>
+				<td>
+					<button class="minus-btn">-</button>
+					<input type="number" value="1" min="1">
+					<button class="plus-btn">+</button>
+				</td>
+				<td>
+					<button class="delete-btn">Delete</button>
+					<button class="like-btn">❤</button>
+				</td>
+			</tr>
+			<tr>
+				<td>Product 2</td>
+				<td>$20.00</td>
+				<td>
+					<button class="minus-btn">-</button>
+					<input type="number" value="1" min="1">
+					<button class="plus-btn">+</button>
+				</td>
+				<td>
+					<button class="delete-btn">Delete</button>
+					<button class="like-btn">❤</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="total"></div>
+	<script>
+		// Select all plus buttons and add event listeners to increase quantity
+const plusButtons = document.querySelectorAll('.plus-btn');
+for (let i = 0; i < plusButtons.length; i++) {
+  const button = plusButtons[i];
+  button.addEventListener('click', function() {
+    const input = button.previousElementSibling;
+    // increases the value of an input element by 1 when a plus button is clicked.
+    input.value = parseInt(input.value) + 1;
+    updateTotal();
+  });
+}
+
+// Select all minus buttons and add event listeners to decrease quantity
+const minusButtons = document.querySelectorAll('.minus-btn');
+for (let i = 0; i < minusButtons.length; i++) {
+  const button = minusButtons[i];
+  button.addEventListener('click', function() {
+    const input = button.nextElementSibling;
+    // decrease the value of an input element by 1 when a minus button is clicked if the input value is greater than 1.
+    if (parseInt(input.value) > 1) {
+      input.value = parseInt(input.value) - 1;
+    }
+    updateTotal();
+  });
+
+// Select all delete buttons and add event listeners to remove item from cart
+const deleteButtons = document.querySelectorAll('.delete-btn');
+for (let i = 0; i < deleteButtons.length; i++) {
+  const button = deleteButtons[i];
+  button.addEventListener('click', function() {
+    button.closest('tr').remove();
+    updateTotal();
+  });
+}
+
+// Select all like buttons and add event listeners to toggle liked class
+const likeButtons = document.querySelectorAll('.like-btn');
+for (let i = 0; i < likeButtons.length; i++) {
+  const button = likeButtons[i];
+  button.addEventListener('click', function() {
+    button.classList.toggle('liked');
+  });
+}
+
+// Calculate total price 
+function updateTotal() {
+  let total = 0;
+  const rows = document.querySelectorAll('tbody tr');
+  for (let i = 0; i < rows.length; i++) {
+    //retrieve the price from the price cell and delete the $ from the string  and use parseFloat to get a float
+    const price = parseFloat(rows[i].querySelector('td:nth-child(2)').textContent.slice(1));
+    //retrieve the quantity from the quantity cell which is a string  and use parseInt to get an integer
+    const quantity = parseInt(rows[i].querySelector('input').value);
+    total += price * quantity;
+  }
+  document.querySelector('.total').textContent = `Total: $${total}`;
+}
+
+// Update the total price when the page loads
+updateTotal();
+}
+</script>
+</body>
+</html>
